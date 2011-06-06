@@ -39,23 +39,6 @@ Request to isbndb.com
 |               &index1=subject_id&value1=<getted value/s>          |
 +-------------------------------------------------------------------+
 
-Examle
-------
-
-<ISBNdb>
-  <BookList total_results=''>
-    <BookData book_id='' isbn=''>
-      <Title></Title>
-      <TitleLong></TitleLong>
-      <AuthorsText></AuthorsText>
-      <PublisherText></PublisherText>
-      <Details change_time='' edition_info='' language='' physical_description_text='' />
-    </BookData>
-    <BookData>
-      ...
-    </BookData>
-  </BookList>
-</ISBNdb>
 """
 
 
@@ -80,15 +63,7 @@ def request(url, datas):
 
 def get_key(datas):
     import settings
-    f = open(settings.CONFIG_FILE, 'r')
-
-    key = f.read()
-    if '\n' in key:
-        key = json.loads(key[:-1])
-    else:
-        key = json.loads(key)
-
-    datas['access_key'] = key['keygen']
+    datas['access_key'] = settings.ISBNDB_KEY
 
 
 def parse_response(url, content):
@@ -119,11 +94,33 @@ def parse_datas(content, datas=None):
 
         return {datas['Attribute']: attr_id}
     else:
-        xml = []
+        xml = {}
+        booklist = content.getElementByTagName('BookList')[0]  # Just one in all response.
+        xml['results'] = booklist.getAttribute('total_results')
+
+        xml['books'] = []
         bookdata = content.getElementByTagName('BookData')
         for item in bookdata:
             book = {}
-            attributes = item.attributes.items()
-            for attr in attributes:
-                book[attr[0]] = attr[1]
-        title = content.getElementByTagName('Title')
+            book['book_id'] = item.getAttribute('book_id')
+            book['isbn'] = item.getAttribute('isbn')
+
+            title = book.getElementByTagName('Title')[0]  # Just only one title
+            book['title'] = title.firstChild.nodeValue
+
+            titlelong = book.getElementByTagName('TitleLong')[0]
+            book['titlelong'] = titlelong.firstChild.nodeValue
+
+            authors = book.getElementByTagName('AuthorsText')[0]
+            book['authors'] = authors.firstChild.nodeValue
+
+            publishers = book.getElementByTagName('PublishersText')[0]
+            book['publishers'] = authors.firstChild.nodeValue
+
+            details = book.getElementByTagName('Details')[0]
+            book['change_time'] = details.getAttribute('change_time')
+            book['edition_info'] = details.getAttribute('edition_info')
+            book['language'] = details.getAttribute('language')
+            book['physical_description_text'] = details.getAttribute('physical_description_text')
+
+            xml['books'].appends(book)
