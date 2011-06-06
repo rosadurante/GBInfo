@@ -11,9 +11,6 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-BASEDIR = os.path.abspath(os.path.dirname(__file__))
-FILE_KEY = os.path.join(BASEDIR, '.config')
-
 DATABASES = {
     'default': {
         'ENGINE': '',  # 'django.db.backends.', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
@@ -150,3 +147,5 @@ LOGGING = {
         },
     }
 }
+
+ISBNDB_KEY = "TYDGW3PH"
