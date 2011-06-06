@@ -95,7 +95,8 @@ def parse_datas(content, datas=None):
         return {datas['Attribute']: attr_id}
     else:
         xml = {}
-        booklist = content.getElementByTagName('BookList')[0]  # Just one in all response.
+        # Just one 'BookList' in all response
+        booklist = content.getElementByTagName('BookList')[0]
         xml['results'] = booklist.getAttribute('total_results')
 
         xml['books'] = []
@@ -121,6 +122,16 @@ def parse_datas(content, datas=None):
             book['change_time'] = details.getAttribute('change_time')
             book['edition_info'] = details.getAttribute('edition_info')
             book['language'] = details.getAttribute('language')
-            book['physical_description_text'] = details.getAttribute('physical_description_text')
+            book['physical_description_text'] = \
+                details.getAttribute('physical_description_text')
+
+            # Cover: get from librarything:
+            book['cover'] = get_cover(book['isbn'])
 
             xml['books'].appends(book)
+
+
+def get_cover(isbn):
+    import settings.LIBRARYTHINGS_KEY as lkey
+    return 'http://covers.librarything.com/devkey/' +\
+        lkey + '/medium/isbn/' + isbn
