@@ -17,7 +17,19 @@ def book_search(field, data):
     if 'full' or 'isbn' or 'title' in field:
         books = request(URL_DATAS['book'],
                         dict(index1=field, value1=data))
-        return books
+
+        count = books['results']
+        if count > 10:
+            if count > 50:
+                count=50;
+            for i in range(count/10):
+                url = URL_DATAS['book'] + 'page_number=' + str(i+2) + '&'
+                next_page = request(url, dict(index1=field, value1=data))
+                for book in next_page['books']:
+                    books['books'].append(book)
+
+        return books['books']
+
     else:
         all_fields_id = request(URL_DATAS[field],
                                 dict(index1='name', value1=data))
@@ -29,7 +41,7 @@ def book_search(field, data):
             results['results'] += books['results']
             for book in books['books']:
                 results['books'].append(book)
-        return results
+        return results['books']
 
 
 def results(request):
