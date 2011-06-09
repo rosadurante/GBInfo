@@ -6,7 +6,7 @@ from django.conf.urls.defaults import patterns, include, url
 
 urlpatterns = patterns('',
     # Examples:
-    # url(r'^$', 'GBInfo.views.home', name='home'),
+    url(r'^$', include('GBInfo.isbndb.urls')),
     # url(r'^GBInfo/', include('GBInfo.foo.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:
