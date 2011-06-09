@@ -84,7 +84,7 @@ def parse_response(url, content):
 
 def parse_datas(content, datas=None):
     if datas:
-        elements = content.getElementByTagName(datas['Element'])
+        elements = content.getElementsByTagName(datas['Element'])
         attr_id = []
         for elem in elements:
             attributes = elem.attributes.items()
@@ -94,31 +94,44 @@ def parse_datas(content, datas=None):
 
         return {datas['Attribute']: attr_id}
     else:
+        import ipdb; ipdb.set_trace()
         xml = {}
         # Just one 'BookList' in all response
-        booklist = content.getElementByTagName('BookList')[0]
+        booklist = content.getElementsByTagName('BookList')[0]
         xml['results'] = booklist.getAttribute('total_results')
 
         xml['books'] = []
-        bookdata = content.getElementByTagName('BookData')
+        bookdata = content.getElementsByTagName('BookData')
         for item in bookdata:
             book = {}
             book['book_id'] = item.getAttribute('book_id')
             book['isbn'] = item.getAttribute('isbn')
 
-            title = book.getElementByTagName('Title')[0]  # Just only one title
-            book['title'] = title.firstChild.nodeValue
+            title = item.getElementsByTagName('Title')[0]  # Just only one title
+            try:
+                book['title'] = title.firstChild.nodeValue
+            except AttributeError:
+                book['title'] = None
 
-            titlelong = book.getElementByTagName('TitleLong')[0]
-            book['titlelong'] = titlelong.firstChild.nodeValue
+            titlelong = item.getElementsByTagName('TitleLong')[0]
+            try:
+                book['titlelong'] = titlelong.firstChild.nodeValue
+            except AttributeError:
+                book['titlelong'] = None
 
-            authors = book.getElementByTagName('AuthorsText')[0]
-            book['authors'] = authors.firstChild.nodeValue
+            authors = item.getElementsByTagName('AuthorsText')[0]
+            try:
+                book['authors'] = authors.firstChild.nodeValue
+            except AttributeError:
+                book['authors'] = None
 
-            publishers = book.getElementByTagName('PublishersText')[0]
-            book['publishers'] = authors.firstChild.nodeValue
+            publishers = item.getElementsByTagName('PublisherText')[0]
+            try:
+                book['publishers'] = authors.firstChild.nodeValue
+            except AttributeError:
+                book['publishers'] = None
 
-            details = book.getElementByTagName('Details')[0]
+            details = item.getElementsByTagName('Details')[0]
             book['change_time'] = details.getAttribute('change_time')
             book['edition_info'] = details.getAttribute('edition_info')
             book['language'] = details.getAttribute('language')
@@ -128,10 +141,12 @@ def parse_datas(content, datas=None):
             # Cover: get from librarything:
             book['cover'] = get_cover(book['isbn'])
 
-            xml['books'].appends(book)
+            xml['books'].append(book)
+
+        return xml
 
 
 def get_cover(isbn):
-    import settings.LIBRARYTHINGS_KEY as lkey
+    from settings import LIBRARYTHINGS_KEY as lkey
     return 'http://covers.librarything.com/devkey/' +\
         lkey + '/medium/isbn/' + isbn
