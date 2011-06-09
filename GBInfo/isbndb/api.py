@@ -94,7 +94,6 @@ def parse_datas(content, datas=None):
 
         return {datas['Attribute']: attr_id}
     else:
-        import ipdb; ipdb.set_trace()
         xml = {}
         # Just one 'BookList' in all response
         booklist = content.getElementsByTagName('BookList')[0]
