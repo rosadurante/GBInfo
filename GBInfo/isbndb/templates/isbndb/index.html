@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% block content %}
+
+<div class="form">
+  <form method="post">{% csrf_token %}
+    {% for fields in form.visible_fields %}
+    <div class="fieldWrapper">
+      <div id="fielderror">{{ fields.errors }}</div>
+      <div id="field">
+        {{ fields.label_tag}}: {{ fields }}
+      </div>
+    </div>
+    {% endfor %}
+    <p><input type="submit" value="Search" /></p>
+  </form>
+</div>
+
+<div class="items">
+  <ul>
+    {% for item in items.object_list %}
+    <li id="title">{{ item.title }}
+      <div id="details">
+        <img src="{{ item.cover }}" />
+        <p>ISBN: {{ item.isbn }}</p>
+        <p>Title: {{ item.title }}</p>
+        <p>Long title: {{ item.titlelong }}</p>
+        <p>Author: {{ item.authors }}</p>
+        <p>Publisher: {{ item.publishers }}</p>
+        <p>Change time: {{ item.change_time }}</p>
+        <p>Edition info: {{ item.edition_info }}</p>
+        <p>Language: {{ item.language }}</p>
+        <p>Description: {{ item.physical_description_text}}</p>
+      </div>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+
+<div class="paginator">
+  {% if items %}
+  <span class="step-links">
+    {% if items.has_previous %}
+    <a href="?page={{ items.previous_page_number }}&search_type={{ form.data.search_type }}&search_string={{ form.data.search_string }}">previous</a>
+    {% endif %}
+    <span class="current">
+      Page {{ items.number }} of {{ items.paginator.num_pages }}.
+    </span>
+    {% if items.has_next %}
+    <a href="?page={{ items.next_page_number }}&search_type={{ form.data.search_type }}&search_string={{ form.data.search_string }}">next</a>
+    {% endif %}
+  </span>
+  {% endif %}
+</div>
+
+{% endblock %}
