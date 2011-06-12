@@ -1,3 +1,5 @@
+
+from django.core.paginator import Paginator
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.utils.translation import ugettext_lazy as _
@@ -45,16 +47,28 @@ def book_search(field, data):
 
 
 def results(request):
-    if request.method == 'POST':
-        form = Searcher(request.POST)
-        field = form.cleaned_data('search_type')
-        data = form.cleaned_data('search_string')
-        items = book_search(field, data)
+    if request.method == 'POST' or (request.method == 'GET' and
+                                    request.GET.get('page')):
+        if request.method == 'POST':
+            form = Searcher(request.POST)
+        else:
+            form = Searcher(request.GET)
+        field = form.data['search_type']
+        data = form.data['search_string']
+        pages = Paginator(book_search(field, data), 5)
+        if request.method == 'POST':
+            elements = pages.page(1)
+        else:
+            elements = pages.page(int(request.GET.get('page')))
     else:
         form = Searcher()
-        items = None
+        pages = None
+        elements = None
 
-    return request_to_response('isbndb/index.html', {
+    return render_to_response('isbndb/index.html', {
             'form': form,
-            'items': items,
+            'items': elements,
             }, context_instance=RequestContext(request))
+
+
+
