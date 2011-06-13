@@ -9,9 +9,7 @@
     {% for fields in form.visible_fields %}
     <div class="fieldWrapper">
       <div id="fielderror">{{ fields.errors }}</div>
-      <div id="field">
-        {{ fields.label_tag}}: {{ fields }}
-      </div>
+      <div id="field">{{ fields }}</div>
     </div>
     {% endfor %}
     <p><input type="submit" value="Search" /></p>
@@ -22,7 +20,7 @@
   <ul>
     {% for item in items.object_list %}
     <li id="title">{{ item.title }}
-      <div id="details">
+      <div id="details" style="display:none;">
         <img src="{{ item.cover }}" />
         <p>ISBN: {{ item.isbn }}</p>
         <p>Title: {{ item.title }}</p>

@@ -1,0 +1,61 @@
+
+body {
+    background-color:black;
+}
+
+.header {
+    color:white;
+    padding-left: 150px;
+}
+
+.content {
+    background-color:white;
+    margin: 20px 20px 20px 20px;
+    padding: 10px 10px 10px 10px;
+    border-radius: 10px 10px 2px 2px;
+}
+
+.fieldWrapper {
+    display: inline-block;
+}
+
+form {
+    border-bottom: 1px solid grey;
+    padding-bottom: 10px;
+    text-align: right;
+    padding-right: 50px;
+}
+
+form p{
+    margin: 0;
+    display: inline;
+}
+
+.footer {
+    color:white;
+    text-align:center;
+    font-size:small;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+li {
+    text-align:center;
+    padding: 10px;
+}
+
+#title {
+    text-decoration:underline;
+    cursor:pointer;
+    font-family:courier,serif;
+}
+
+.paginator {
+    padding-top: 30px;
+    text-align: center;
+    font-size:medium;
+    font-weight: bold;
+}
