@@ -47,23 +47,18 @@ def book_search(field, data):
 
 
 def results(request):
-    if request.method == 'POST' or (request.method == 'GET' and
-                                    request.GET.get('page')):
-        if request.method == 'POST':
-            form = Searcher(request.POST)
-        else:
-            form = Searcher(request.GET)
+    if not request.GET.items():
+        form = Searcher()
+        elements = None
+    else:
+        form = Searcher(request.GET)
         field = form.data['search_type']
         data = form.data['search_string']
         pages = Paginator(book_search(field, data), 5)
-        if request.method == 'POST':
-            elements = pages.page(1)
-        else:
+        if 'page' in request.GET.items():
             elements = pages.page(int(request.GET.get('page')))
-    else:
-        form = Searcher()
-        pages = None
-        elements = None
+        else:
+            elements = pages.page(1)
 
     return render_to_response('isbndb/index.html', {
             'form': form,

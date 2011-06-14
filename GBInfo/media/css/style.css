@@ -43,6 +43,7 @@ ul {
 }
 
 li {
+    float:none;
     text-align:center;
     padding: 10px;
 }
@@ -51,6 +52,23 @@ li {
     text-decoration:underline;
     cursor:pointer;
     font-family:courier,serif;
+}
+
+.details {
+    text-align:center;
+    margin-left: 30%;
+}
+
+#img {
+    padding: 10px;
+    text-align:left;
+}
+
+#text {
+    text-align:left;
+    display:inline;
+    padding-left: 10px;
+    margin-left: 40%;
 }
 
 .paginator {
