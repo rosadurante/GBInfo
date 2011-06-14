@@ -5,3 +5,37 @@ GBInfo Project
 Get book info details from isbndb.com
 
 Author: Rosa Durante <rosunix@gmail.com>
+
+Installation:
+------------
+
+. Install setuptools and virtualenv:
+
+sudo apt-get install virtualenv setuptools
+
+. Create a virtualenv for this project:
+
+virtualenv venv-gbinfo --no-site-packages
+
+. Activate virtualenv:
+
+source venv-gbinfo/bin/activate
+
+. Get source code from github (read-only):
+
+git clone git://github.com/rosUnix/GBInfo.git
+
+. Install django:
+
+easy_install django
+
+. Install httplib2
+
+easy_install httplib2
+
+. Run project:
+
+cd GBInfo
+python manage.py runserver
+
+. Open http://localhost:8000 and enjoy!
